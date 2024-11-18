@@ -32,11 +32,13 @@ medicaid
 ideology_plot <- ggplot(data = medicaid,
                         mapping = aes(x = d9,
                                       y = d10)) + 
+  geom_point() + 
+  geom_smooth() + 
   labs(x = "Reported Ideology of Respondents",
        y = "Years of Schooling of Respondents")
 ideology_plot
 ```
-*My graph is not showing any plot points so I may need to adjust my data source or clean my data set*
+
 
 
 
