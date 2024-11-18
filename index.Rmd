@@ -9,7 +9,7 @@ output:
 
 
 
-## Project thoughts
+## Project Thoughts
 
 I am interested in exploring data related to public opinion on policy issues in the United States. For instance, in a battleground state, what are the voting-eligible population's opinions on contentious issues such as abortion access, medicaid expansion or housing subsidy programs. 
 
@@ -19,7 +19,7 @@ Do registered voters' support in Medicaid expansion in their state? More specifi
 
 As I was looking at a data set from 2021 that was sponsored by he AARP (American Association of Retired Persons), the data is primarily focused on collecting response from registered voters' over the age of 50. Furthermore, the data set is more specialized as I am specifically looking at responses from registered voters over the age of 50 in South Carolina. My hypothesis is that voters over the age of 50 are more inclined to support Medicaid Expansion as they directly benefit from an increase in access to medical programs that are covered by their Medicaid insurance. The two variables I would be most concerned with are the respondent's age and their answer to Q4, from the AARP survey, about the importance of expanding Medicaid for low-income residents in South Carolina A positive result would show a strong correlation between respondents issuing their support for Medicaid expansion and their age as over 50. Additionally, this hypothesis could be further supported by respondents answers to questions about supporting programs for low-income households. If these respondents truly support the expansion of Medicaid they would show support for this program to assist low-income SC residents. On the other hand, my hypothesis would be disproved if despite their age, respondents did not show an overwhelming support for the expansion of Medicaid.
 
-## First Visual
+## Visualization Observing Respondents Support for Medicaid Expansion based on age 
 
 ```{r}
 library(tidyverse)
@@ -30,17 +30,18 @@ medicaid <- read_csv("data/medicaid.csv")
 medicaid 
 
 ideology_plot <- ggplot(data = medicaid,
-                        mapping = aes(x = d9,
-                                      y = d10)) + 
-  geom_point() + 
-  geom_smooth() + 
+                        mapping = aes(x = d8,
+                                      y = q6)) + 
+  geom_col(fill = "blue") + 
   labs(x = "Reported Ideology of Respondents",
-       y = "Years of Schooling of Respondents")
+       y = "Support for Medicaid Expansion")
 ideology_plot
 ```
 
 
+## Analysis 
 
+As hypothesized, those respondents over the age of 50 demonstrated strong support for Medicaid being expanded to South Carolina residents that earn less than $18,000 a year, political ideology was not a significant contributing variable. Despite 35% of respondents identifying as Republican, 45% strongly supported Medicaid expansion. Thus to answer the research question, despite differing political ideologies, the strong majority of eligible voters over the age of 50 demonstrate strong support for Medicaid expansion in South Carolina, a state that has not expanded their Medicaid program as of yet. 
 
 
 
