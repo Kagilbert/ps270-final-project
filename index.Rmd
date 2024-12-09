@@ -23,11 +23,11 @@ As I was looking at a data set from 2021 that was sponsored by he AARP (American
 
 ```{r}
 library(tidyverse)
-library(infer)
 
 medicaid <- read_csv("data/medicaid.csv") |>
   rename(Partisanship = d8) |>
-  filter(Partisanship != "Don't know or refused [DO NOT READ]")
+  filter(Partisanship != "Don't know or refused [DO NOT READ]",
+         Partisanship != "Something else")
 medicaid
 ```
 
@@ -44,7 +44,8 @@ medicaid <- medicaid |>
                q6 == "Strongly oppose" ~ 1,
                q6 == "Don't know or refused [DO NOT READ] Neither support or oppose [DO NOT READ]" ~ NA,
                TRUE ~ NA_real_)) |>
-  drop_na(q6_new)
+  drop_na(q6_new) |>
+  rename(Support = q6_new)
 medicaid
 ```
 
@@ -53,7 +54,7 @@ medicaid
 
 ```{r fig.width=10}
 partisanship_plot <- ggplot(data = medicaid,
-                        mapping = aes(x = q6_new, fill = Partisanship)) +
+                        mapping = aes(x = Support, fill = Partisanship)) +
   geom_bar(position = "dodge") + 
   labs(title = "Measuring Support for Medicaid Expansion Against Partisanship",
        x = "Support for Medicaid Expansion in South Carolina (1 = no support, 4 = strong support)",
@@ -70,6 +71,15 @@ As hypothesized, those respondents over the age of 50 demonstrated strong suppor
 
 ## Regression Table 
 ```{r}
+library(broom)
+library(knitr)
 
+medicaid$Partisanship <- as.factor(medicaid$Partisanship)
+
+model <- lm(Support ~ Partisanship, data = medicaid)
+
+regression_table <- tidy(model)
+kable(regression_table, col.names = c("Term", "Estimate", "Std. Error", "t value", "p value"),
+      caption = "Regression Results: Support Based on Partisanship")
 ```
 
