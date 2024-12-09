@@ -21,7 +21,7 @@ As I was looking at a data set from 2021 that was sponsored by he AARP (American
 
 ## Loading the Data 
 
-```{r}
+```{r, echo = FALSE}
 library(tidyverse)
 
 medicaid <- read_csv("data/medicaid.csv") |>
@@ -34,7 +34,7 @@ medicaid
 
 ## Assign Numerical Values to Respondent's Answers to Q6: "Do you support or oppose expanding Medicaid health care to South Carolina residents who earn under $18,000 a year, and bringing home hundreds of millions in South Carolina tax dollars from Washington, DC? Is that strongly support, somewhat support, neither support or oppose, somewhat oppose, or strongly oppose?" 
 
-```{r}
+```{r, echo = FALSE}
 table(medicaid$q6)
 
 medicaid <- medicaid |>
@@ -52,7 +52,7 @@ medicaid
 
 ## Visualization Observing Respondents Support for Medicaid Expansion Based on Parisanship
 
-```{r fig.width=10}
+```{r fig.width=10, echo = FALSE}
 partisanship_plot <- ggplot(data = medicaid,
                         mapping = aes(x = Support, fill = Partisanship)) +
   geom_bar(position = "dodge") + 
@@ -70,7 +70,7 @@ As hypothesized, those respondents over the age of 50 demonstrated strong suppor
 
 
 ## Regression Table 
-```{r}
+```{r, echo = FALSE}
 library(broom)
 library(knitr)
 
@@ -82,4 +82,10 @@ regression_table <- tidy(model)
 kable(regression_table, col.names = c("Term", "Estimate", "Std. Error", "t value", "p value"),
       caption = "Regression Results: Support Based on Partisanship")
 ```
+
+## Conclusion 
+
+
+
+
 
