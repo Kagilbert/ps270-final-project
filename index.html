@@ -1550,15 +1550,6 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <p>As I was looking at a data set from 2021 that was sponsored by he AARP (American Association of Retired Persons), the data is primarily focused on collecting response from registered voters’ over the age of 50. Furthermore, the data set is more specialized as I am specifically looking at responses from registered voters over the age of 50 in South Carolina. My hypothesis is that voters over the age of 50 are more inclined to support Medicaid Expansion as they directly benefit from an increase in access to medical programs that are covered by their Medicaid insurance. The two variables I would be most concerned with are the respondent’s age and their answer to Q4, from the AARP survey, about the importance of expanding Medicaid for low-income residents in South Carolina A positive result would show a strong correlation between respondents issuing their support for Medicaid expansion and their age as over 50. Additionally, this hypothesis could be further supported by respondents answers to questions about supporting programs for low-income households. If these respondents truly support the expansion of Medicaid they would show support for this program to assist low-income SC residents. On the other hand, my hypothesis would be disproved if despite their age, respondents did not show an overwhelming support for the expansion of Medicaid.</p>
 <h2 id="loading-the-data">Loading the Data</h2>
 <div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyverse.tidyverse.org'>tidyverse</a></span><span class='op'>)</span></span>
-<span></span>
-<span><span class='va'>medicaid</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://readr.tidyverse.org/reference/read_delim.html'>read_csv</a></span><span class='op'>(</span><span class='st'>"data/medicaid.csv"</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
-<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/rename.html'>rename</a></span><span class='op'>(</span>Partisanship <span class='op'>=</span> <span class='va'>d8</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
-<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>Partisanship</span> <span class='op'>!=</span> <span class='st'>"Don't know or refused [DO NOT READ]"</span>,</span>
-<span>         <span class='va'>Partisanship</span> <span class='op'>!=</span> <span class='st'>"Something else"</span><span class='op'>)</span></span>
-<span><span class='va'>medicaid</span></span></code></pre>
-</div>
 <pre><code># A tibble: 848 × 41
    respid  fdate  qage s1    s1a   s1com s2    q1    q2    q3    q4   
     &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;
@@ -1582,9 +1573,6 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </div>
 <h2 id="assign-numerical-values-to-respondents-answers-to-q6-do-you-support-or-oppose-expanding-medicaid-health-care-to-south-carolina-residents-who-earn-under-18000-a-year-and-bringing-home-hundreds-of-millions-in-south-carolina-tax-dollars-from-washington-dc-is-that-strongly-support-somewhat-support-neither-support-or-oppose-somewhat-oppose-or-strongly-oppose">Assign Numerical Values to Respondent’s Answers to Q6: “Do you support or oppose expanding Medicaid health care to South Carolina residents who earn under $18,000 a year, and bringing home hundreds of millions in South Carolina tax dollars from Washington, DC? Is that strongly support, somewhat support, neither support or oppose, somewhat oppose, or strongly oppose?”</h2>
 <div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/table.html'>table</a></span><span class='op'>(</span><span class='va'>medicaid</span><span class='op'>$</span><span class='va'>q6</span><span class='op'>)</span></span></code></pre>
-</div>
 <pre><code>
     Don&#39;t know or refused [DO NOT READ] 
                                      33 
@@ -1598,18 +1586,6 @@ Neither support or oppose [DO NOT READ]
                                      75 
                        Strongly support 
                                     534 </code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>medicaid</span> <span class='op'>&lt;-</span> <span class='va'>medicaid</span> <span class='op'>|&gt;</span></span>
-<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>q6_new <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/case_when.html'>case_when</a></span><span class='op'>(</span><span class='va'>q6</span> <span class='op'>==</span> <span class='st'>"Strongly support"</span> <span class='op'>~</span> <span class='fl'>4</span>,</span>
-<span>               <span class='va'>q6</span> <span class='op'>==</span> <span class='st'>"Somewhat support"</span> <span class='op'>~</span> <span class='fl'>3</span>,</span>
-<span>               <span class='va'>q6</span> <span class='op'>==</span> <span class='st'>"Somewhat oppose"</span> <span class='op'>~</span> <span class='fl'>2</span>,</span>
-<span>               <span class='va'>q6</span> <span class='op'>==</span> <span class='st'>"Strongly oppose"</span> <span class='op'>~</span> <span class='fl'>1</span>,</span>
-<span>               <span class='va'>q6</span> <span class='op'>==</span> <span class='st'>"Don't know or refused [DO NOT READ] Neither support or oppose [DO NOT READ]"</span> <span class='op'>~</span> <span class='cn'>NA</span>,</span>
-<span>               <span class='cn'>TRUE</span> <span class='op'>~</span> <span class='cn'>NA_real_</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
-<span>  <span class='fu'><a href='https://tidyr.tidyverse.org/reference/drop_na.html'>drop_na</a></span><span class='op'>(</span><span class='va'>q6_new</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
-<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/rename.html'>rename</a></span><span class='op'>(</span>Support <span class='op'>=</span> <span class='va'>q6_new</span><span class='op'>)</span></span>
-<span><span class='va'>medicaid</span></span></code></pre>
-</div>
 <pre><code># A tibble: 798 × 42
    respid  fdate  qage s1    s1a   s1com s2    q1    q2    q3    q4   
     &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;
@@ -1633,33 +1609,12 @@ Neither support or oppose [DO NOT READ]
 </div>
 <h2 id="visualization-observing-respondents-support-for-medicaid-expansion-based-on-parisanship">Visualization Observing Respondents Support for Medicaid Expansion Based on Parisanship</h2>
 <div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>partisanship_plot</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>medicaid</span>,</span>
-<span>                        mapping <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>Support</span>, fill <span class='op'>=</span> <span class='va'>Partisanship</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
-<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_bar.html'>geom_bar</a></span><span class='op'>(</span>position <span class='op'>=</span> <span class='st'>"dodge"</span><span class='op'>)</span> <span class='op'>+</span> </span>
-<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>title <span class='op'>=</span> <span class='st'>"Measuring Support for Medicaid Expansion Against Partisanship"</span>,</span>
-<span>       x <span class='op'>=</span> <span class='st'>"Support for Medicaid Expansion in South Carolina (1 = no support, 4 = strong support)"</span>,</span>
-<span>       y <span class='op'>=</span> <span class='st'>"Number fo Responses"</span><span class='op'>)</span></span>
-<span><span class='va'>partisanship_plot</span></span></code></pre>
-</div>
 <p><img src="index_files/figure-html5/unnamed-chunk-3-1.png" width="960" /></p>
 </div>
 <h2 id="analysis-for-visualization">Analysis for Visualization</h2>
 <p>As hypothesized, those respondents over the age of 50 demonstrated strong support for Medicaid being expanded to South Carolina residents that earn less than $18,000 a year, political ideology was not a significant contributing variable. Despite 35% of respondents identifying as Republican, 45% strongly supported Medicaid expansion. Thus to answer the research question, despite differing political ideologies, the strong majority of eligible voters over the age of 50 demonstrate strong support for Medicaid expansion in South Carolina, a state that has not expanded their Medicaid program as of yet.</p>
 <h2 id="regression-table">Regression Table</h2>
 <div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://broom.tidymodels.org/'>broom</a></span><span class='op'>)</span></span>
-<span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://yihui.org/knitr/'>knitr</a></span><span class='op'>)</span></span>
-<span></span>
-<span><span class='va'>medicaid</span><span class='op'>$</span><span class='va'>Partisanship</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>medicaid</span><span class='op'>$</span><span class='va'>Partisanship</span><span class='op'>)</span></span>
-<span></span>
-<span><span class='va'>model</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>Support</span> <span class='op'>~</span> <span class='va'>Partisanship</span>, data <span class='op'>=</span> <span class='va'>medicaid</span><span class='op'>)</span></span>
-<span></span>
-<span><span class='va'>regression_table</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://generics.r-lib.org/reference/tidy.html'>tidy</a></span><span class='op'>(</span><span class='va'>model</span><span class='op'>)</span></span>
-<span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span><span class='va'>regression_table</span>, col.names <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Term"</span>, <span class='st'>"Estimate"</span>, <span class='st'>"Std. Error"</span>, <span class='st'>"t value"</span>, <span class='st'>"p value"</span><span class='op'>)</span>,</span>
-<span>      caption <span class='op'>=</span> <span class='st'>"Regression Results: Support Based on Partisanship"</span><span class='op'>)</span></span></code></pre>
-</div>
 <table>
 <caption><span id="tab:unnamed-chunk-4">Table 1: </span>Regression Results: Support Based on Partisanship</caption>
 <thead>
@@ -1696,6 +1651,7 @@ Neither support or oppose [DO NOT READ]
 </tbody>
 </table>
 </div>
+<h2 id="conclusion">Conclusion</h2>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->

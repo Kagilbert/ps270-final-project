@@ -45,8 +45,17 @@ medicaid <- medicaid |>
                q6 == "Don't know or refused [DO NOT READ] Neither support or oppose [DO NOT READ]" ~ NA,
                TRUE ~ NA_real_)) |>
   drop_na(q6_new) |>
-  rename(Support = q6_new)
-medicaid
+  rename(level_of_support = q6_new)
+medicaid 
+```
+
+```{r}
+support_table <- medicaid |> 
+  count(level_of_support) |>
+  pivot_wider(names_from = level_of_support,
+              values_from = n,
+              names_prefix = "Support_Level_") 
+kable(support_table, caption = "Number of Responses for Each Assigned Level of Support for Medicaid Expansion")
 ```
 
 
@@ -54,7 +63,7 @@ medicaid
 
 ```{r fig.width=10, echo = FALSE}
 partisanship_plot <- ggplot(data = medicaid,
-                        mapping = aes(x = Support, fill = Partisanship)) +
+                        mapping = aes(x = level_of_support, fill = Partisanship)) +
   geom_bar(position = "dodge") + 
   labs(title = "Measuring Support for Medicaid Expansion Against Partisanship",
        x = "Support for Medicaid Expansion in South Carolina (1 = no support, 4 = strong support)",
@@ -76,7 +85,7 @@ library(knitr)
 
 medicaid$Partisanship <- as.factor(medicaid$Partisanship)
 
-model <- lm(Support ~ Partisanship, data = medicaid)
+model <- lm(level_of_support ~ Partisanship, data = medicaid)
 
 regression_table <- tidy(model)
 kable(regression_table, col.names = c("Term", "Estimate", "Std. Error", "t value", "p value"),
