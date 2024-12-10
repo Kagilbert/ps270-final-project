@@ -28,15 +28,13 @@ medicaid <- read_csv("data/medicaid.csv") |>
   rename(Partisanship = d8) |>
   filter(Partisanship != "Don't know or refused [DO NOT READ]",
          Partisanship != "Something else")
-medicaid
+
 ```
 
 
 ## Assign Numerical Values to Respondent's Answers to Q6: "Do you support or oppose expanding Medicaid health care to South Carolina residents who earn under $18,000 a year, and bringing home hundreds of millions in South Carolina tax dollars from Washington, DC? Is that strongly support, somewhat support, neither support or oppose, somewhat oppose, or strongly oppose?" 
 
 ```{r, echo = FALSE}
-table(medicaid$q6)
-
 medicaid <- medicaid |>
   mutate(q6_new = case_when(q6 == "Strongly support" ~ 4,
                q6 == "Somewhat support" ~ 3,
@@ -46,10 +44,11 @@ medicaid <- medicaid |>
                TRUE ~ NA_real_)) |>
   drop_na(q6_new) |>
   rename(level_of_support = q6_new)
-medicaid 
+
 ```
 
-```{r}
+```{r, echo = FALSE}
+library(knitr)
 support_table <- medicaid |> 
   count(level_of_support) |>
   pivot_wider(names_from = level_of_support,
