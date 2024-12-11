@@ -116,7 +116,8 @@ tax_dollars_table <- medicaid |>
   pivot_wider(names_from = tax_dollars,
               values_from = n,
               names_prefix = "Monetary_Support_Level_") 
-kable(tax_dollars_table, caption = "Number of Responses for Each Assigned Level of Support for Funding Medicaid from SC Tax Dollars (lowest [1] to highest [5]")
+kable(tax_dollars_table, caption = "Number of Responses for Each Assigned Level of Support 
+      for Funding Medicaid from SC Tax Dollars (lowest [1] to highest [5]")
 
 ```
 
