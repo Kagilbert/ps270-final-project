@@ -30,7 +30,9 @@ medicaid <- read_csv("data/medicaid.csv") |>
 ```
 
 
-## Assign Numerical Values to Respondent's Answers to Q6: "Do you support or oppose expanding Medicaid health care to South Carolina residents who earn under $18,000 a year, and bringing home hundreds of millions in South Carolina tax dollars from Washington, DC? Is that strongly support, somewhat support, neither support or oppose, somewhat oppose, or strongly oppose?" 
+## Observing Potential Relationship between Partisanship and potential for Medicaid Expansion
+
+1. Assign Numerical Values to Respondent's Answers to Q6: "Do you support or oppose expanding Medicaid health care to South Carolina residents who earn under $18,000 a year, and bringing home hundreds of millions in South Carolina tax dollars from Washington, DC? Is that strongly support, somewhat support, neither support or oppose, somewhat oppose, or strongly oppose?" 
 
 ```{r, echo = FALSE}
 medicaid <- medicaid |>
@@ -56,18 +58,18 @@ kable(support_table, caption = "Number of Responses for Each Assigned Level of S
 ```
 
 
-## Visualization Observing Respondents Support for Medicaid Expansion Based on Parisanship
+## Visualization Observing Respondents Support for Medicaid Expansion Based on Partisanship
 
 ```{r fig.width=10, echo = FALSE}
 partisanship_plot <- ggplot(data = medicaid,
                         mapping = aes(x = level_of_support, fill = Partisanship)) +
   geom_bar(position = "dodge") + 
   labs(title = "Measuring Support for Medicaid Expansion Against Partisanship",
-       x = "Support for Medicaid Expansion in South Carolina (1 = oppose, 2 = somewhat oppose, 3 = somewhat support, 4 = strong support)",
+       x = "Support for Medicaid Expansion in South Carolina 
+       (1 = oppose, 2 = somewhat oppose, 3 = somewhat support, 4 = strong support)",
        y = "Number fo Responses")
 partisanship_plot
 ```
-
 
 
 ## Analysis for Visualization
@@ -87,6 +89,50 @@ model <- lm(level_of_support ~ Partisanship, data = medicaid)
 regression_table <- tidy(model)
 kable(regression_table, col.names = c("Term", "Estimate", "Std. Error", "t value", "p value"),
       caption = "Regression Results: Support Based on Partisanship")
+```
+
+
+## Another Variable to Consider: Funding
+
+Observing respondent's answers to survey Question 5: "How important is it for state lawmakers to bring South Carolina tax dollars home to expand Medicaid health care? Is it extremely important, very, somewhat, not very, or not at all important?" against Partisanship. 
+
+1. Assign Numerical Values to Respondent's Answers to Q5 
+```{r, echo = FALSE}
+medicaid <- medicaid |>
+  mutate(q5_new = case_when(q5 == "Extremely important" ~ 4,
+               q5 == "Very important" ~ 3,
+               q5 == "Somewhat important" ~ 2,
+               q5 == "Not very or not at all important" ~ 1,
+               q5 == "Don't know or refused [DO NOT READ]" ~ NA,
+               TRUE ~ NA_real_)) |>
+  drop_na(q5_new) |>
+  rename(tax_dollars = q5_new)
+
+```
+
+```{r, echo = FALSE}
+tax_dollars_table <- medicaid |> 
+  count(tax_dollars) |>
+  pivot_wider(names_from = tax_dollars,
+              values_from = n,
+              names_prefix = "Monetary_Support_Level_") 
+kable(tax_dollars_table, caption = "Number of Responses for Each Assigned Level of Support for Funding Medicaid from SC Tax Dollars (lowest [1] to highest [5]")
+
+```
+
+
+
+
+2. Visualization Observing Respondents Views towards funding Medicaid based on Partisanship
+```{r fig.width=10, echo = FALSE}
+funding_plot <- ggplot(data = medicaid,
+                        mapping = aes(x = tax_dollars, fill = Partisanship)) +
+  geom_bar(position = "dodge") + 
+  labs(title = "Measuring Importance of Funding for Medicaid Expansion Against Partisanship",
+       x = "Are SC Tax Dollars Necessary for Medicaid Funding 
+       (1 = not very important, 2 = somewhat important, 3 = very important, 4 = extremely important)",
+       y = "Number fo Responses")
+funding_plot
 ```
 
 
