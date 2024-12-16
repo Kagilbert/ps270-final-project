@@ -13,6 +13,10 @@ output:
 
 I am interested in exploring data related to public opinion on policy issues in the United States. For instance, in a battleground state, what are the voting-eligible population's opinions on contentious issues such as abortion access, medicaid expansion or housing subsidy programs. 
 
+## Project Source 
+
+AARP, South Carolina Voters' Views on Medicaid Expansion, American Directions Research Group (ADRG), (Cornell University, Ithaca, NY: Roper Center for Public Opinion Research, 2021), Dataset, DOI: 10.25940/ROPER-31119767. 
+
 ## Research Question + Hypothesis 
 
 Do registered voters' support in Medicaid expansion in their state? More specifically, how do registered voters feel about Medicaid expansion in states that have yet to expand Medicaid? 
